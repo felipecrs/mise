@@ -167,9 +167,28 @@ The `uv_create_args` and `python_create_args` options of `_.python.venv` do not
 apply here. To pass arguments when mise creates this environment, set
 `python.uv_venv_create_args`.
 
-uv can still choose a Python it downloaded itself over the one mise installed.
-To make `uv sync` and `uv run` use mise's interpreter, set `UV_PYTHON` to its
-path:
+See the [uv recipes in the Python cookbook](/mise-cookbook/python.html#mise-uv)
+for complete project setups.
+
+### uv's own Python selection {#uv-python-preference}
+
+uv has its own [Python version selection](https://docs.astral.sh/uv/concepts/python-versions/),
+controlled by `UV_PYTHON_PREFERENCE` and the `python-preference` setting.
+With uv's default `managed` preference, uv can download and run its own
+managed Python installations instead of using the Python mise installed on
+`PATH`. Compare `mise exec -- python --version` with
+`mise exec -- uv run python --version` when the version you see is not the one
+mise selected. To make uv only use the Python installed by mise (and other
+system Pythons) without downloading or replacing it with uv-managed Pythons,
+set `UV_PYTHON_PREFERENCE` in `[env]`:
+
+```toml [mise.toml]
+[env]
+UV_PYTHON_PREFERENCE = "only-system"
+```
+
+To strictly point uv at mise's selected interpreter path, you can also set
+`UV_PYTHON`:
 
 ```toml [mise.toml]
 [tools]
